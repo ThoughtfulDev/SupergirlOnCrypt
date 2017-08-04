@@ -1,0 +1,18 @@
+Client generiert Public/Private hier CPub und CPriv genannt.
+
+Client hat Public Key vom Server hier SPub genannt.
+
+1. verschlüssel den CPriv mit SPub also kann nur der server den entschlüsseln.
+2. trashe CPriv
+2. für jede datei:
+    - generiere aes key
+    - verschlüssel datei damit
+    - verschlüssel aes key mit CPub und schreib das mit in die datei.
+
+
+um also zu entschlüsseln.
+
+anfrage an C&C server mit dem verschlüsselten CPriv
+server entschlüsselt das mit seinem SPriv. client erhält also CPriv zurück.
+client kann nun bei jeder datei den aes key entschlüsseln und die datei entschlüsseln.
+
