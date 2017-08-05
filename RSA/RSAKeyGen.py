@@ -3,7 +3,7 @@ from cryptography.hazmat.primitives.asymmetric import rsa, padding
 from cryptography.hazmat.backends import default_backend
 
 class RSAKeyGen:
-    def __init__(self, size=2048, pub_exp=65537):
+    def __init__(self, size=1024, pub_exp=65537):
         self.key = rsa.generate_private_key(backend=default_backend(), public_exponent=pub_exp, key_size=size)
         self.public_key = self.key.public_key().public_bytes(serialization.Encoding.OpenSSH, serialization.PublicFormat.OpenSSH)
         self.private_key = self.key.private_bytes(encoding=serialization.Encoding.PEM,
@@ -24,3 +24,5 @@ class RSAKeyGen:
     def forgetPrivate(self):
         self.private_key = None
         self.private_key_str = None
+        del self.private_key
+        del self.private_key_str
