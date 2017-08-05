@@ -26,8 +26,8 @@ def genKeyPair():
     fC = FileCrypter()
     fC.detectDecoding("shakespeare.txt")
     fC.encryptFile("shakespeare.txt", keys.getPublicKeyAsStr())
-    time.sleep(20)
-    fC.decyptFile("shakespeare.txt.enc", clear_key.decode('utf-8'))
+    time.sleep(5)
+    fC.decyptFile("shakespeare.txt.supergirl", clear_key.decode('utf-8'))
 
     keys.forgetPrivate()
 

@@ -9,8 +9,6 @@ from chardet.universaldetector import UniversalDetector
 
 class FileCrypter:
 
-
-
     def __init__(self):
         self.key, self.iv = RandomKeyGen().getKey()
         self.backend = default_backend()
@@ -29,7 +27,6 @@ class FileCrypter:
                     break
             detector.close()
             self.encoding = detector.result['encoding']
-            print(self.encoding)
 
     def aes_encrypt(self, msg):
         return self.encryptor.update(msg)
@@ -73,7 +70,7 @@ class FileCrypter:
         )
 
         cipher = base64.b64encode(cipher).decode(self.encoding)
-        with open(filename + '.enc', 'w') as enc_f:
+        with open(filename + '.supergirl', 'w') as enc_f:
             enc_f.write(self.encoding + '\n')
             enc_f.write(cipher + '\n')
             for x in content_list:
@@ -127,15 +124,9 @@ class FileCrypter:
             fileContentClear = fileContentClear.decode(encoding)
             fileContentClearList.append(fileContentClear)
 
-        with open(filename[0: len(filename) - 4], 'w') as clearFile:
+        with open(filename[0: len(filename) - 10], 'w') as clearFile:
             for text in fileContentClearList:
                 clearFile.write(text)
             clearFile.close()
 
         os.remove(filename)
-
-
-
-
-
-
