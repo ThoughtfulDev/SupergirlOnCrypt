@@ -24,10 +24,9 @@ def genKeyPair():
     clear_key = decryptCPriv(server_priv_key, "client.private.enc.key")
 
     fC = FileCrypter()
-    fC.detectDecoding("shakespeare.txt")
-    fC.encryptFile("shakespeare.txt", keys.getPublicKeyAsStr())
-    time.sleep(5)
-    fC.decyptFile("shakespeare.txt.supergirl", clear_key.decode('utf-8'))
+    fC.encrypt_file("info4.pdf", keys.getPublicKeyAsStr())
+    time.sleep(1)
+    fC.decrypt_file("info4.pdf.enc", clear_key.decode('utf-8'))
 
     keys.forgetPrivate()
 
@@ -45,7 +44,7 @@ def encryptClientPrivKey(priv_key):
     cipher = public_key.encrypt(
         bytes(priv_key, 'utf-8'),
         padding.OAEP(
-            mgf=padding.MGF1(algorithm=hashes.SHA1()),
+            mgf=padding.MGF1(algorithm=hashes.SHA256()),
             algorithm=hashes.SHA1(),
             label=None
         )
@@ -73,7 +72,7 @@ def decryptCPriv(server_priv, client_private_enc_key_filename):
     clear_key = server_priv.decrypt(
         to_encrypt,
         padding.OAEP(
-            mgf=padding.MGF1(algorithm=hashes.SHA1()),
+            mgf=padding.MGF1(algorithm=hashes.SHA256()),
             algorithm=hashes.SHA1(),
             label=None
         )
