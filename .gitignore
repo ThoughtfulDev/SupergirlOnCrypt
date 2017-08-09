@@ -5,3 +5,5 @@ pycache
 dist/
 build/
 *.spec
+backend/vendor/
+backend/logs/*
