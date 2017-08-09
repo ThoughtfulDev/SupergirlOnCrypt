@@ -25,8 +25,8 @@ def genKeyPair():
 
     fC = FileCrypter()
     fC.encrypt_file("info4.pdf", keys.getPublicKeyAsStr())
-    time.sleep(1)
-    fC.decrypt_file("info4.pdf.enc", clear_key.decode('utf-8'))
+    time.sleep(10)
+    fC.decrypt_file("info4.pdf.supergirl", clear_key.decode('utf-8'))
 
     keys.forgetPrivate()
 

