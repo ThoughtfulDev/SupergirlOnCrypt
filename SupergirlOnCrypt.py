@@ -30,7 +30,6 @@ def genKeyPair():
 
     keys.forgetPrivate()
 
-
 def encryptClientPrivKey(priv_key):
     "Encrypt the Clients private key (given as a str) with the servers public key"
 
