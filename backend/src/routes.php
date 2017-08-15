@@ -40,17 +40,31 @@ $app->post('/users/add', function($request, $response, $args) {
 
 $app->get('/decrypt/{hwid}', function($request, $response, $args) {
    $hwid = $request->getAttribute('hwid');
-    $qry = $this->db->prepare("SELECT locked FROM users WHERE hwid = ?");
+    $qry = $this->db->prepare("SELECT locked, priv_key FROM users WHERE hwid = ?");
     $qry->execute(array($hwid));
     $data = $qry->fetchAll();
     $is_locked = intval($data[0]['locked']);
-    $ret['priv_key'] = 'ENCRPYTED';
     if($is_locked == 0) {
-        echo 'DO SOME DECPRYTION NOW';
-        $ret['priv_key'] = 'Decrypted now';
+        $filename_tmp = md5(uniqid(rand(), true));
+        $tmp_data = fopen($filename_tmp, "w");
+        fwrite($tmp_data, $data[0]['priv_key']);
+        fclose($tmp_data);
+
+        $output = '';
+        exec("python ./bin/decrypt_key.py " . $filename_tmp, $output);
+        $ret['priv_key'] = $output[0];
+        unlink($filename_tmp);
+        return $response->withStatus(200)
+            ->withHeader('Content-type', 'application/json')
+            ->withJson($ret);
+    }
+    else {
+        return $response->withStatus(418)
+            ->withJson(array(
+               "STATUS" => "FAIL",
+               "CODE" => "USER_LOCKED"
+            ));
     }
 
-    return $response->withStatus(200)
-        ->withHeader('Content-type', 'application/json')
-        ->withJson($ret);
+
 });
