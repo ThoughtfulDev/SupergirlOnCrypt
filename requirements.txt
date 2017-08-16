@@ -1,2 +1,5 @@
 cryptography
 pycrypto
+requests
+pysocks
+
