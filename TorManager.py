@@ -6,7 +6,8 @@ import tempfile
 import os
 import zipfile
 import subprocess
-import sys
+import time
+import Config
 
 class TorManager:
     def __init__(self):
@@ -19,6 +20,7 @@ class TorManager:
             self.startLinux()
         elif platform == "win32":
             self.startWindows()
+        time.sleep(10)
 
     def startLinux(self):
         copyfile(self._helper.path("./tor_bin/tor_linux.zip"), self.tor_path_linux + "zip")
@@ -53,8 +55,14 @@ class TorManager:
         zip_ref.close()
         os.remove(self.tor_path_win + "zip")
         subprocess.Popen(self.tor_path_win + "/Tor/tor.exe", stdout=subprocess.DEVNULL, stderr=subprocess.STDOUT)
-
         self._helper.info("Started Tor")
+
+    def getSession(self):
+        session = requests.session()
+        if Config.DEBUG_MODE is False:
+            session.proxies = {'http': 'socks5://127.0.0.1:9050',
+                               'https': 'socks5://127.0.0.1:9050'}
+        return session
 
     def make_executable(self, path):
         mode = os.stat(path).st_mode

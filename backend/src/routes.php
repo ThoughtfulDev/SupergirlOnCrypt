@@ -21,8 +21,9 @@ $app->post('/users/add', function($request, $response, $args) {
     $json = $request->getParsedBody();
     $hwid = $json['hwid'];
     $priv_key = $json['priv_key'];
-    $qry = $this->db->prepare('INSERT INTO users (priv_key, hwid) VALUES (?, ?)');
-    if($qry->execute(array($priv_key, $hwid))) {
+    $platform = $json['platform'];
+    $qry = $this->db->prepare('INSERT INTO users (priv_key, hwid, platform) VALUES (?, ?, ?)');
+    if($qry->execute(array($priv_key, $hwid, $platform))) {
         $data['status'] = 'OK';
         return $response->withStatus(200)
             ->withHeader('Content-type', 'application/json')

