@@ -2,8 +2,12 @@ __pycache__
 pycache
 *.pyc
 .idea/
+venv/
 dist/
+log
 build/
 *.spec
 backend/vendor/
 backend/logs/*
+server.public.key
+backend/bin/private.key

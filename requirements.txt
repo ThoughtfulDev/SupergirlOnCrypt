@@ -1,5 +1,5 @@
 cryptography
-pycrypto
+pycryptodome
 requests
 pysocks
 
