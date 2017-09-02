@@ -2,4 +2,5 @@ cryptography
 pycryptodome
 requests
 pysocks
+pyqt5
 
