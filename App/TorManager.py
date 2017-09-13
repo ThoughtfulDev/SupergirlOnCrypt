@@ -30,7 +30,7 @@ class TorManager:
             rmtree(self.tor_path_linux)
             os.makedirs(self.tor_path_linux)
 
-        #extract the tor_linux.zip
+        # extract the tor_linux.zip
         zip_ref = zipfile.ZipFile(self.tor_path_linux + "zip", 'r')
         zip_ref.extractall(self.tor_path_linux + "/")
         zip_ref.close()

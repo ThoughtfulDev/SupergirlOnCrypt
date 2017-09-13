@@ -18,6 +18,7 @@ from GUI import GUI
 _helper = Helper()
 _session = 0
 
+
 def init():
     global _session
     tor = TorManager()
@@ -78,6 +79,7 @@ def encryptClientPrivKey(priv_key):
     )
     _helper.info("Private Client Key is encrypted")
     return cipher
+
 
 if __name__ == "__main__":
     _helper.info("Program started")
