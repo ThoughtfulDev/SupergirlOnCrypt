@@ -24,7 +24,7 @@ class TorManager:
             time.sleep(10)
 
     def startLinux(self):
-        copyfile(self._helper.path("./tor_bin/tor_linux.zip"), self.tor_path_linux + "zip")
+        copyfile(self._helper.path("tor_bin/tor_linux.zip"), self.tor_path_linux + "zip")
         if not os.path.exists(self.tor_path_linux):
             os.makedirs(self.tor_path_linux)
         else:
@@ -43,7 +43,7 @@ class TorManager:
         self._helper.info("Started Tor")
 
     def startWindows(self):
-        copyfile(self._helper.path("./tor_bin/tor_win.zip"), self.tor_path_win + "zip")
+        copyfile(self._helper.path("tor_bin/tor_win.zip"), self.tor_path_win + "zip")
         if not os.path.exists(self.tor_path_win):
             os.makedirs(self.tor_path_win)
         else:

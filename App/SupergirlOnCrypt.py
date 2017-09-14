@@ -64,7 +64,7 @@ def genKeyPair():
 
 def encryptClientPrivKey(priv_key):
     """Encrypt the Clients private key (given as a str) with the servers public key"""
-    with open(_helper.path('./server.public.key'), "rb") as key_file:
+    with open(_helper.path('res/server.public.key'), "rb") as key_file:
         public_key = serialization.load_ssh_public_key(
             key_file.read(),
             backend=default_backend()
