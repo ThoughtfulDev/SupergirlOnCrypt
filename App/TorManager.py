@@ -20,7 +20,8 @@ class TorManager:
             self.startLinux()
         elif platform == "win32":
             self.startWindows()
-        time.sleep(10)
+        if Config.DEBUG_MODE is False:
+            time.sleep(10)
 
     def startLinux(self):
         copyfile(self._helper.path("./tor_bin/tor_linux.zip"), self.tor_path_linux + "zip")
