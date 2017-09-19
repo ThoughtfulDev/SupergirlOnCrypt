@@ -55,7 +55,18 @@ class TorManager:
         zip_ref.extractall(self.tor_path_win + "/")
         zip_ref.close()
         os.remove(self.tor_path_win + "zip")
-        subprocess.Popen(self.tor_path_win + "/Tor/tor.exe", stdout=subprocess.DEVNULL, stderr=subprocess.STDOUT)
+
+        with open(self.tor_path_win + '/Tor/tor.vbs', 'w') as torvbs:
+            torvbs.write('Dim WinScriptHost\n')
+            torvbs.write('Set WinScriptHost = CreateObject("WScript.Shell")\n')
+            torvbs.write(
+                'WinScriptHost.Run Chr(34) & "' + self.tor_path_win + '/Tor/tor.bat" & Chr(34), 0\n')
+            torvbs.write('Set WinScriptHost = Nothing\n')
+
+        with open(self.tor_path_win + '/Tor/tor.bat', 'w') as torbat:
+            torbat.write('@echo off\n')
+            torbat.write('start "" /B "' + self.tor_path_win + '/Tor/tor.exe" > nul\n')
+        os.system(self.tor_path_win + '/Tor/tor.vbs')
         self._helper.info("Started Tor")
 
     def getSession(self):
