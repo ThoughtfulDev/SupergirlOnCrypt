@@ -2,6 +2,7 @@ import Config
 import os
 import sys
 import logging
+import psutil
 
 
 class Helper:
@@ -39,6 +40,17 @@ class Helper:
         with open(filename, 'w') as f:
             f.write(content)
             f.close()
+
+    def safe_exit(self):
+        os = sys.platform
+        name = "tor"
+        if os == "win32":
+            name += ".exe"
+        for proc in psutil.process_iter():
+            if proc.name() == name:
+                proc.kill()
+                self.info("Killed tor...")
+        sys.exit(0)
 
     def supergirl_pic(self):
         print('                                               d8b       888')

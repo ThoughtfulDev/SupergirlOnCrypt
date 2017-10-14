@@ -2,11 +2,11 @@ App/__pycache__
 App/pycache
 *.pyc
 App/.idea/
-App/venv/
-App/dist/
 App/log
 App/test_files/
-App/build/
+Scripts/venv/
+Scripts/build/
+Scripts/dist/
 *.spec
 API/vendor/
 API/logs/*

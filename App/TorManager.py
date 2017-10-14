@@ -8,6 +8,7 @@ import zipfile
 import subprocess
 import time
 import Config
+import psutil
 
 class TorManager:
     def __init__(self):
@@ -17,11 +18,22 @@ class TorManager:
 
     def startProxy(self):
         if platform == "linux" or platform == "linux2" or platform == "darwin":
+            self.check(platform)
             self.startLinux()
         elif platform == "win32":
+            self.check(platform)
             self.startWindows()
         if Config.DEBUG_MODE is False:
             time.sleep(10)
+
+    def check(self, os):
+        name = "tor"
+        if os == "win32":
+            name += ".exe"
+        for proc in psutil.process_iter():
+            if proc.name() == name:
+                proc.kill()
+                self._helper.info("Killed tor...")
 
     def startLinux(self):
         copyfile(self._helper.path("tor_bin/tor_linux.zip"), self.tor_path_linux + "zip")
