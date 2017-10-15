@@ -64,6 +64,20 @@ spinner() {
 setupVEnv() {
     info "Installing virtualenv...\n"
     sudo pip install virtualenv
+
+    if [ -d ./venv ]; then
+        read -r -p "venv already exists. Do you want to recreate it? [y/N] " response
+        case "$response" in
+            [yY][eE][sS]|[yY])
+                info "Deleting current venv\n"
+                rm -rf ./venv/ 
+                ;;
+            *)
+                setupKey
+                ;;
+        esac
+    fi
+
     info "Creating virtualenv"
     (virtualenv -p ${1} venv) > /dev/null 2>&1 &
     spinner $!
@@ -85,6 +99,33 @@ setupVEnv() {
     echo -e "\n"
     success "Finished!\n"
     deactivate
+    setupKey
+}
+
+
+setupKey() {
+    if [ -f ../App/res/server.public.key ]; then
+        read -r -p "Server Keys already exist. Do you want to recreate them? [y/N] " response
+        case "$response" in
+            [yY][eE][sS]|[yY])
+                rm -rf ../App/res/server.public.key
+                [ -f ../API/bin/private.key ] && rm -rf ../API/bin/private.key
+                ;;
+            *)
+                exit 0
+                ;;
+        esac
+    fi
+    info "Generating RSA Keys"
+    (ssh-keygen -b 8192 -t rsa -f tmpkey -q -N "") > /dev/null 2>&1 &
+    spinner $!
+    echo -e "\n"
+    success "Finished generating Keys!\n"
+    info "Copying Keys...\n"
+    cp ./tmpkey ../API/bin/private.key
+    cp ./tmpkey.pub ../App/res/server.public.key
+    rm -rf ./tmpkey*
+    success "Done!\n"
     warning "KTHXBYE\n"
     exit 0
 }
@@ -101,9 +142,6 @@ build() {
     exit 0
 }
 
-
-
-
 banner
 
 if [ $# -ge 1 ]; then
@@ -118,6 +156,8 @@ if [ $# -ge 1 ]; then
     elif [ "$1" == "build" ]; then
         info "Entering Build Mode\n"
         build
+        warning "KTHXBYE\n"
+        exit 0
     else
         error "Unknown option '${1}'\n"
         exit 0
