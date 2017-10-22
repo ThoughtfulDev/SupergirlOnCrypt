@@ -13,3 +13,4 @@ API/logs/*
 App/res/server.public.key
 API/bin/private.key
 API/.idea/
+.idea/
