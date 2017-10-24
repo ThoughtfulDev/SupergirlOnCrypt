@@ -85,14 +85,29 @@ setupVEnv() {
     success "Done!\n"
     info "Sourcing venv...\n"
     source ./venv/bin/activate
+
+    case "$(python --version 2>&1)" in
+        *" 3.5"*)
+            ;;
+        *)
+            error "Python Version must be >= 3.5\n"
+            error "Removing venv...\n"
+            rm -rf ./venv/
+            warning "KTHXBYE\n"
+            exit 0
+            ;;
+    esac
+
+
     info "Installing requirements..."
     (pip install -r ../App/requirements.txt) > /dev/null 2>&1 &
     spinner $!
     echo -e "\n"
     success "Installed requirements\n"
     info "Fixing broken things...\n"
-    cp -r ./venv/lib/python3.5/site-packages/Crypto venv/lib/python3.5/site-packages/Cryptodome
-    cp ./_raw_api.py venv/lib/python3.5/site-packages/Crypto/Util/_raw_api.py
+    PYTHON_PATH=`ls ./venv/lib`
+    cp -r "./venv/lib/${PYTHON_PATH}/site-packages/Crypto" "venv/lib/${PYTHON_PATH}/site-packages/Cryptodome"
+    cp "./_raw_api.py" "venv/lib/${PYTHON_PATH}/site-packages/Crypto/Util/_raw_api.py"
     info "Installing pyinstaller straight from Github"
     (pip install https://github.com/pyinstaller/pyinstaller/archive/develop.zip) > /dev/null 2>&1 &
     spinner $!
