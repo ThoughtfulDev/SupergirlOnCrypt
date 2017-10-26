@@ -70,7 +70,7 @@ setupVEnv() {
         case "$response" in
             [yY][eE][sS]|[yY])
                 info "Deleting current venv\n"
-                rm -rf ./venv/ 
+                rm -rf ./venv/
                 ;;
             *)
                 setupKey
@@ -88,6 +88,8 @@ setupVEnv() {
 
     case "$(python --version 2>&1)" in
         *" 3.5"*)
+            ;;
+        *" 3.6"*)
             ;;
         *)
             error "Python Version must be >= 3.5\n"
@@ -164,7 +166,7 @@ if [ $# -ge 1 ]; then
         info "Entering Setup Mode\n"
         if [ $# -eq 2 ]; then
             setupVEnv $2
-        else 
+        else
             error "No python path\n"
             exit 0
         fi
