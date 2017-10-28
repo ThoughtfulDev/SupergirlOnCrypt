@@ -25,8 +25,17 @@ banner() {
                :##*  *##,
                  *####:
                    :,
-    \t    ${RED}SUPERGIRL${YELLOW}ONCRYPT
-    \t      Version ${CYAN}0.0.1${NC}
+When I was a child, my planet, Krypton, was dying. I was sent to Earth to protect my cousin. 
+But my pod got knocked off-course, and by the time I got here, my cousin had already grown up and become... 
+${RED}Superman${NC}. 
+And so, I hid my powers, until recently when an accident forced me to reveal myself to the world. 
+    
+To most people, I am an assistant at ${GREEN}CatCo Worldwide Media${NC}. 
+But in secret, I work with my adoptive sister for the ${YELLOW}D.E.O${NC}. to protect my city from alien life 
+and anyone else that means to cause it ${RED}harm${NC}. 
+    
+    I am ${RED}SUPERGIRL${YELLOW}ONCRYPT
+    \tVersion ${CYAN}0.0.1${NC}
     "
 }
 
@@ -129,6 +138,7 @@ setupKey() {
                 [ -f ../API/bin/private.key ] && rm -rf ../API/bin/private.key
                 ;;
             *)
+                warning "KTHXBYE\n"
                 exit 0
                 ;;
         esac
@@ -150,13 +160,23 @@ setupKey() {
 build() {
     source ./venv/bin/activate
     info "Building binary"
-    (pyinstaller --clean --onefile --add-data="../App/tor_bin:tor_bin" --add-data="../App/res:res" ../App/SupergirlOnCrypt.py) > /dev/null 2>&1 &
+    (pyinstaller --clean --onefile --add-data="../App/tor_bin:tor_bin" --add-data="../App/res:res" ../App/SupergirlOnCrypt.py) > ./pyinstaller.log 2>&1 &
     spinner $!
     echo -e "\n"
-    success "Finished!\n"
-    deactivate
-    warning "KTHXBYE\n"
-    exit 0
+    if [ ! -f ./dist/SupergirlOnCrypt ]; then
+        error "There were errors while building...have a look at pyinstaller.log\n"
+        exit 1
+    else
+        info "Cleaning...\n"
+        rm -r build/
+        rm SupergirlOnCrypt.spec
+        rm pyinstaller.log
+        success "Finished!\n"
+        deactivate
+        success "Executable => ${PWD}/dist/SupergirlOnCrypt\n"
+        warning "KTHXBYE\n"
+        exit 0
+    fi
 }
 
 banner
