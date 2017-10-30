@@ -54,6 +54,49 @@ function info {
     Write-Host  "[-] $args" -ForegroundColor Cyan
 }
 
+function genKeys {
+    if( (Test-Path "..\App\res\server.public.key" -PathType Leaf) -and (Test-Path "..\API\bin\private.key" -PathType Leaf) ) {
+        warning "Keys exist already!"
+        $caption = "Choose Action";
+        $message = "Should we delete the Keys and recreate them?";
+        $no = new-Object System.Management.Automation.Host.ChoiceDescription "&No","No";
+        $yes = new-Object System.Management.Automation.Host.ChoiceDescription "&Yes","Yes";
+        $choices = [System.Management.Automation.Host.ChoiceDescription[]]($no,$yes);
+        $answer = $host.ui.PromptForChoice($caption,$message,$choices,0)
+        switch ($answer){
+            0 {
+                info "Ok, skipping"; 
+                break
+            }
+            1 {
+                info "Recreating Keys..."
+                .\venv\Scripts\activate.ps1
+                Start-Process -FilePath "python" -ArgumentList "win_rsa_gen.py"  -NoNewWindow -wait;
+                cp .\private.key ..\API\bin\private.key
+                cp .\server.public.key ..\App\res\server.public.key
+                success "Done"
+                deactivate
+                del .\server.public.key
+                del .\private.key
+                break
+            }
+        }
+    } else {
+        info "Creating Keys..."
+        .\venv\Scripts\activate.ps1
+        Start-Process -FilePath "python" -ArgumentList "win_rsa_gen.py"  -NoNewWindow -wait;
+        cp .\private.key ..\API\bin\private.key
+        cp .\server.public.key ..\App\res\server.public.key
+        del server.public.key
+        del private.key
+        success "Done"
+        deactivate
+    }
+
+    warning "KTHXBYE"
+}
+
+
 function setupMode {
     success "Entering Setup"
     info "Installing virtualenv..."
@@ -78,6 +121,17 @@ function setupMode {
                 Remove-Item -Recurse -Force .\venv\
                 Start-Process -FilePath "virtualenv" -ArgumentList "-p $path venv"  -NoNewWindow -wait 2>&1;
                 success "Done"
+                info "Sourcing venv..."
+                .\venv\Scripts\activate.ps1
+                info "Installing requirements..."
+                Start-Process -FilePath ".\venv\Scripts\pip.exe" -ArgumentList "install -r ../App/requirements.txt"  -NoNewWindow -wait 2>&1;
+                info "Fixing things..."
+                cp -r .\venv\Lib\site-packages\Crypto\ .\venv\Lib\site-packages\Cryptodome
+                cp .\_raw_api.py .\venv\Lib\site-packages\Crypto\Util\_raw_api.py
+                info "Installing pyinstaller straight from Github"
+                Start-Process -FilePath ".\venv\Scripts\pip.exe" -ArgumentList "install https://github.com/pyinstaller/pyinstaller/archive/develop.zip"  -NoNewWindow -wait 2>&1;
+                success "Done!"
+                deactivate
                 break
             }
         }
@@ -85,12 +139,31 @@ function setupMode {
         info "Creating venv..."
         Start-Process -FilePath "virtualenv" -ArgumentList "-p $path venv"  -NoNewWindow -wait 2>&1;
         success "Done"
+        info "Sourcing venv..."
+        .\venv\Scripts\activate.ps1
+        info "Installing requirements..."
+        Start-Process -FilePath ".\venv\Scripts\pip.exe" -ArgumentList "install -r ../App/requirements.txt"  -NoNewWindow -wait 2>&1;
+        info "Fixing things..."
+        cp -r .\venv\Lib\site-packages\Crypto\ .\venv\Lib\site-packages\Cryptodome
+        cp .\_raw_api.py .\venv\Lib\site-packages\Crypto\Util\_raw_api.py
+        info "Installing pyinstaller straight from Github"
+        Start-Process -FilePath ".\venv\Scripts\pip.exe" -ArgumentList "install https://github.com/pyinstaller/pyinstaller/archive/develop.zip"  -NoNewWindow -wait 2>&1;
+        success "Done!"
+        deactivate
     }
-   
+    genKeys;
 }
 
-function buildMode {
 
+function buildMode {
+    success "Entering Build"
+    info "Sourcing venv..."
+    .\venv\Scripts\activate.ps1
+    Start-Process -FilePath "pyinstaller" -ArgumentList '--clean --noconsole --onefile --icon="..\icon.ico" --add-data="..\App\tor_bin;tor_bin" --add-data="..\App\res;res" ..\App\SupergirlOnCrypt.py'  -NoNewWindow -wait 2>&1;
+    rmdir .\build
+    del .\SupergirlOnCrypt.spec
+    deactivate
+    warning "KTHXBYE"
 }
 
 banner;

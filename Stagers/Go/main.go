@@ -36,7 +36,7 @@ func randSeq(n int) string {
 }
 
 func main() {
-  var url string = "http://localhost:8000/test.sh"
+  var url string = "your-direct-download-url-here"
   var length int = 10
   var name string = randSeq(length)
     
