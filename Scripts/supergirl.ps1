@@ -159,8 +159,8 @@ function buildMode {
     success "Entering Build"
     info "Sourcing venv..."
     .\venv\Scripts\activate.ps1
-    Start-Process -FilePath "pyinstaller" -ArgumentList '--clean --noconsole --onefile --icon="..\icon.ico" --add-data="..\App\tor_bin;tor_bin" --add-data="..\App\res;res" ..\App\SupergirlOnCrypt.py'  -NoNewWindow -wait 2>&1;
-    rmdir .\build
+    Start-Process -FilePath "pyinstaller" -ArgumentList '--clean --noupx --noconsole --onefile --icon="..\icon.ico" --add-data="..\App\tor_bin;tor_bin" --add-data="..\App\res;res" ..\App\SupergirlOnCrypt.py'  -NoNewWindow -wait 2>&1;
+    Remove-Item -Recurse -Force .\build\
     del .\SupergirlOnCrypt.spec
     deactivate
     warning "KTHXBYE"

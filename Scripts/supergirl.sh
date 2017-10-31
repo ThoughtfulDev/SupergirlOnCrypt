@@ -160,7 +160,7 @@ setupKey() {
 build() {
     source ./venv/bin/activate
     info "Building binary"
-    (pyinstaller --clean --onefile --add-data="../App/tor_bin:tor_bin" --add-data="../App/res:res" ../App/SupergirlOnCrypt.py) > ./pyinstaller.log 2>&1 &
+    (pyinstaller --clean --noupx --onefile --add-data="../App/tor_bin:tor_bin" --add-data="../App/res:res" ../App/SupergirlOnCrypt.py) > ./pyinstaller.log 2>&1 &
     spinner $!
     echo -e "\n"
     if [ ! -f ./dist/SupergirlOnCrypt ]; then

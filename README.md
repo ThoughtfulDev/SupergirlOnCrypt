@@ -18,7 +18,7 @@ And i :heart: Supergirl so there you go.
 
 Both Windows AND Linux must have Python >= 3.5 installed.
 
-Optionally you need the Golang compiler if you want to use the Go Stager because the Binary with Pyinstaller is quite large (~57mb)
+Optionally you need the Golang compiler if you want to use the Go Stager because the Binary with Pyinstaller is quite large (~57mb - Linux , 30mb - Windows)
 (Go Stager is only ~700kb).
 
 ---
