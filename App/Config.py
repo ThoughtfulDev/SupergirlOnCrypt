@@ -12,3 +12,7 @@ FILE_TYPES = ['py', 'cpp', 'js', 'doc', 'docx', 'pdf', 'mp3', 'wav',
               ]
 
 MAX_SIZE_LIMIT = 1.25
+
+#if we should reboot on windows after first execution
+#for wallpaper change
+WIN_SHOULD_REBOOT = True 

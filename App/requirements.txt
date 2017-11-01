@@ -4,4 +4,4 @@ requests
 pysocks
 pyqt5
 psutil
-
+pillow
