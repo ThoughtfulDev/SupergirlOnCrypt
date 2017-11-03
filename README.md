@@ -2,6 +2,8 @@
 
 ![Project Logo](https://thoughtful-dev.com/projects/supergirloncrypt/header.jpg)
 
+## WORK IN PROGRESS WILL UPDATE THE README SOON!
+
 **For EDUCATIONAL PURPOSE ONLY**
 
 This is a Crypto Trojan written in Python which can be packed using Pyinstaller. 
