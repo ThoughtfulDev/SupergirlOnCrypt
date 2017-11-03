@@ -28,7 +28,7 @@ Optionally you need the Golang compiler if you want to use the Go Stager because
 
 ## API
 
-Since we communicate with our API we need to set it up. The API(located in ./API duhh) is written in PHP so any Linux /Win Server will do.
+Since we communicate with our API we need to set it up. The API(located in ./API duhh) is written in PHP so any Linux /Win Server will do. (More Info on settings up the API coming soon)
 ....
 
 ## The Trojan
