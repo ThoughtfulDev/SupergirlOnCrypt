@@ -1,6 +1,6 @@
 # SupergirlOnCrypt :heart: :punch: :boom:
 
-![Project Logo](https://s1.postimg.org/1xwn1n7sen/supergirl-season-2-finale-slice-600x200.jpg)
+![Project Logo](https://thoughtful-dev.com/projects/supergirloncrypt/header.jpg)
 
 **For EDUCATIONAL PURPOSE ONLY**
 
@@ -12,7 +12,7 @@ And i :heart: Supergirl so there you go.
 2. [Setup](#setup)
 3. [Building](#building)
 ---
-![Image while Building](https://s1.postimg.org/7k7b0868an/pic.png)
+![Image while Building](https://thoughtful-dev.com/projects/supergirloncrypt/term.png)
 ---
 ## Requirements
 
