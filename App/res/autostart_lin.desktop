@@ -1,0 +1,9 @@
+[Desktop Entry]
+Name=SupergirlOnCrypt
+GenericName=SupergirlOnCrypt
+Comment=I encrypt files lol
+Exec=[home_folder]/SupergirlOnCrypt
+Terminal=false
+Type=Application
+Categories=Network;FileTransfer;
+StartupNotify=false
