@@ -2,6 +2,8 @@
 
 ![Project Logo](https://thoughtful-dev.com/projects/supergirloncrypt/header.jpg)
 
+**You currently cant decrypt Files unless you set the `locked` column in the database for this PC to `0`. I will try to add something other than Bitcoin Payment. Maybe some Supergirl Questions?**
+
 **For EDUCATIONAL PURPOSE ONLY**
 
 This is a Crypto Trojan written in Python which can be packed using Pyinstaller... 
@@ -33,6 +35,15 @@ So if you first generate a binary for Linux as shown here then you have to copy 
 3. Optionally change your File Types
 4. Build Executables/Binary for Windows and/or Linux
 5. Setup API
+
+## Overview of DEBUG True vs False
+Debug On | Debug Off
+------------ | -------------
+Creates a logfile | No logfile
+Does not user Tor | Uses Tor to communicate
+Encrypts Folder `./test_files` | Encrypts Users HomeFolder
+
+**If you are Testing leave the DEBUG MODE ON OR USE A VM**
 
 
 ## Building

