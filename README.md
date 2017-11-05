@@ -2,12 +2,10 @@
 
 ![Project Logo](https://thoughtful-dev.com/projects/supergirloncrypt/header.jpg)
 
-## WORK IN PROGRESS WILL UPDATE THE README SOON!
-
 **For EDUCATIONAL PURPOSE ONLY**
 
-This is a Crypto Trojan written in Python which can be packed using Pyinstaller. 
-And i :heart: Supergirl so there you go.
+This is a Crypto Trojan written in Python which can be packed using Pyinstaller... 
+and i :heart: Supergirl so there you go.
 
 ## Content
 1. [Requirements](#requirements)
@@ -18,24 +16,23 @@ And i :heart: Supergirl so there you go.
 ---
 ## Requirements
 
-Both Windows AND Linux must have Python >= 3.5 installed.
+Both Windows AND Linux must have Python >= 3.5 installed to build the Executable/Binary.
 
-Optionally you need the Golang compiler if you want to use the Go Stager because the Binary with Pyinstaller is quite large (~57mb - Linux , 30mb - Windows)
+Optionally you need the Golang compiler if you want to use the Go Stager because the Binary with Pyinstaller is quite large (~60mb - Linux , 30mb - Windows)
 (Go Stager is only ~700kb).
 
 ---
 ## Setup
 
-## API
-
-Since we communicate with our API we need to set it up. The API(located in ./API duhh) is written in PHP so any Linux /Win Server will do. (More Info on settings up the API coming soon)
-....
-
+We will generate the API´s public and private key in this process.
+So if you first generate a binary for Linux as shown here then you have to copy the whole repository folder to the windows box and only choose to recreate the `venv`.
 ## The Trojan
 
 1. Change the API_URL in App/Config.py to your C&C Server URL
 2. Disable DEBUG_MODE (Leave it on if your API is running locally because otherwise Tor cant reach your local network)
 3. Optionally change your File Types
+4. Build Executables/Binary for Windows and/or Linux
+5. Setup API
 
 
 ## Building
@@ -46,6 +43,11 @@ $ cd Scripts
 $ ./supergirl.sh setup python3
 $ ./supergirl.sh build
 ```
+**Now copy the whole folder to the Windows VM/Machine where you want to build the Windows Executable. When running the `supergirl.ps1` ONLY recreate the `venv` and NOT the Keys since they are already generated from our Linux Setup.** *
+
+*Optionally you can also clone the Repo to the Windows Machine and only replace `API/bin/private.key` and `App/res/server.public.key`
+
+**This also applies vice versa**
 
 ### Windows
 ```
@@ -75,6 +77,33 @@ PS> .\supergirl.ps1 -mode build
 10. Profit.
 
 
+## API
+
+Since we communicate with our API we need to set it up. The API(located in ./API duhh) is written in PHP so any Linux /Win Server will do.
+On your Ubuntu C&C Server run:
+```
+$ sudo add-apt-repository ppa:ondrej/php
+$ sudo apt update
+$ sudo apt install apache2 php7.1 php7.1-mbstring php7.1-sqlite3 php7.1-xml
+$ sudo apt install composer
+```
+Now copy the API Folder to your Server in the www root
+```
+$ cd <web-root>
+$ composer install
+```
+We need to install python to decrypt our keys if a user wants to decrypt
+```
+$ sudo apt install python3-dev python3-pip
+$ cd <web-root>
+$ pip install cryptography
+```
+Your API should now be ready on http://ip/public (should respond with 501)
+
+**I wont show you how to setup a Tor hidden Service**
+
+
+
 # Disclaimer
 
 ### FOR EDUCATIONAL PURPOSE ONLY I AM NOT RESPONSIBLE FOR ANYTHING
@@ -101,3 +130,5 @@ LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
 OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 SOFTWARE.
 ```
+---
+I have no Idea if you understand this README. 

