@@ -105,7 +105,7 @@ $ composer install
 ```
 We need to install python to decrypt our keys if a user wants to decrypt
 ```
-$ sudo apt install python3-dev python3-pip
+$ sudo apt install python3 python3-dev python3-pip
 $ cd <web-root>
 $ pip install cryptography
 ```
