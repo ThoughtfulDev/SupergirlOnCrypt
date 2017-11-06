@@ -95,19 +95,19 @@ On your Ubuntu C&C Server run:
 ```
 $ sudo add-apt-repository ppa:ondrej/php
 $ sudo apt update
-$ sudo apt install apache2 php7.1 php7.1-mbstring php7.1-sqlite3 php7.1-xml
-$ sudo apt install composer
+$ sudo apt install apache2 php7.1 libapache2-mod-php7.1 php7.1-mbstring php7.1-sqlite3 php7.1-xml
+$ sudo apt install composer unzip
 ```
 Now copy the API Folder to your Server in the www root
+
 ```
-$ cd <web-root>
+$ cd /var/html
 $ composer install
 ```
 We need to install python to decrypt our keys if a user wants to decrypt
 ```
 $ sudo apt install python3 python3-dev python3-pip
-$ cd <web-root>
-$ pip install cryptography
+$ pip3 install cryptography
 ```
 Your API should now be ready on http://ip/public (should respond with 501)
 

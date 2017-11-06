@@ -52,7 +52,7 @@ $app->get('/decrypt/{hwid}', function($request, $response, $args) {
         fclose($tmp_data);
 
         $output = '';
-        exec("python ./bin/decrypt_key.py " . $filename_tmp, $output);
+        exec("python3 ../bin/decrypt_key.py " . $filename_tmp, $output);
         $ret['priv_key'] = $output[0];
         $ret['STATUS'] = "SUCCESS";
         unlink($filename_tmp);
