@@ -33,6 +33,7 @@ class FileCrypter:
         if not os.path.isfile(file_name):
             return
 
+        #calculate the MAX_SIZE in GB
         file_size = os.path.getsize(file_name) * 0.000000001
         if file_size > Config.MAX_SIZE_LIMIT:
             return
@@ -42,6 +43,7 @@ class FileCrypter:
             backend=default_backend()
         )
 
+        #write the AES encryption key into a seperate file
         keyb64 = base64.b64encode(self.key)
         ivb64 = base64.b64encode(self.iv)
         t = bytes(keyb64.decode(self.encoding) + ";" + ivb64.decode(self.encoding), self.encoding)

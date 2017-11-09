@@ -52,7 +52,7 @@ class TorManager:
         self.make_executable(self.tor_path_linux + "/tor")
         self.make_executable(self.tor_path_linux + "/start.sh")
         subprocess.call(self.tor_path_linux + "/start.sh")
-        self._helper.info("Started Tor")
+        self._helper.info("Started Tor in " + str(self.tor_path_linux))
 
     def startWindows(self):
         copyfile(self._helper.path("tor_bin/tor_win.zip"), self.tor_path_win + "zip")
@@ -69,6 +69,8 @@ class TorManager:
         os.remove(self.tor_path_win + "zip")
 
         self.tor_path_win = self.tor_path_win.replace("/", "\\")
+
+        #create vbs script to run tor in background without a console
         with open(self.tor_path_win + '\\Tor\\tor.vbs', 'w') as torvbs:
             torvbs.write('Dim WinScriptHost\n')
             torvbs.write('Set WinScriptHost = CreateObject("WScript.Shell")\n')
@@ -77,7 +79,7 @@ class TorManager:
             torvbs.write('Set WinScriptHost = Nothing\n')
 
         os.system(self.tor_path_win + '\\Tor\\tor.vbs')
-        self._helper.info("Started Tor")
+        self._helper.info("Started Tor in " + str(self.tor_path_win))
 
     def getSession(self):
         session = requests.session()
