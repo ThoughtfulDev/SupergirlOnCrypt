@@ -2,7 +2,7 @@ import logging
 
 DEBUG_MODE = True
 LOG_LEVEL = logging.DEBUG
-API_URL = "http://192.168.1.21:8080"
+API_URL = "http://localhost:8080"
 
 FILE_TYPES = ['py', 'cpp', 'js', 'doc', 'docx', 'pdf', 'mp3', 'wav',
               'mp4', 'txt', 'log', 'html', 'jpg', 'jpeg', 'gif', 'png', 'tga',

@@ -3,6 +3,7 @@ import sys
 from Helper import Helper
 from pathlib import Path
 from FileCrypter import FileCrypter
+import Config
 
 
 class DecryptThread (QThread):
@@ -18,7 +19,10 @@ class DecryptThread (QThread):
     def decrypt(self):
         h = Helper()
         not_encrypted = []
-        pathlist = Path('./test_files').glob('**/*.supergirl')
+        p = './test_files'
+        if Config.DEBUG_MODE is False:
+            p = str(Path.home())
+        pathlist = Path(p).glob('**/*.supergirl')
         for path in pathlist:
             path_in_str = str(path)
             fc = FileCrypter()
@@ -28,4 +32,4 @@ class DecryptThread (QThread):
             except IOError:
                 not_encrypted.append(path_in_str)
                 h.error("Could not decrypt " + path_in_str)
-        sys.exit()
+        h.safe_exit()

