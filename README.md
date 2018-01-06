@@ -76,7 +76,7 @@ PS> .\supergirl.ps1 -mode build
 4. `GOOS=linux go build -ldflags="-s -w" -o stager main.go`
 
 #### Building a Windows Stager
-5. `GOOS=windows GOARCH=386 go build -ldflags="-s -w" -o stager.exe main.go`
+5. `GOOS=windows GOARCH=386 go build -ldflags="-s -w -H=windowsgui" -o stager.exe main.go`
 
 6. Optionally compress the Stager(.exe) binary with upx
 
