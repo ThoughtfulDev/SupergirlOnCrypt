@@ -1,3 +1,6 @@
+import json
+import base64
+import collections
 from PyQt5 import QtCore
 from PyQt5.QtCore import QSize
 from PyQt5.QtGui import QImage, QPalette, QBrush, QFont
@@ -5,11 +8,9 @@ from PyQt5.QtWidgets import QLabel, QPushButton, QWidget, QMessageBox, QTextEdit
 from Helper import Helper
 from TorManager import TorManager
 import Config
-import json
-import base64
 import DecryptThread
 import requests
-import collections
+
 
 
 class GUI(QWidget):

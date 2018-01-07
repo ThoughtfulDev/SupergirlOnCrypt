@@ -1,11 +1,11 @@
+import base64
+import os
 from cryptography.hazmat.primitives.asymmetric import padding
 from cryptography.hazmat.primitives import hashes, serialization
 from cryptography.hazmat.backends import default_backend
 from AES.RandomKeyGen import RandomKeyGen
 from Crypto import Random
 from Crypto.Cipher import AES
-import base64
-import os
 import Config
 
 

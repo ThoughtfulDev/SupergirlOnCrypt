@@ -1,12 +1,12 @@
-import requests
 from sys import platform
 from shutil import copyfile, rmtree
-from Helper import Helper
 import tempfile
 import os
 import zipfile
 import subprocess
 import time
+import requests
+from Helper import Helper
 import Config
 import psutil
 

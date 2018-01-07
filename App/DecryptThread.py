@@ -1,7 +1,7 @@
-from PyQt5.QtCore import QThread
 import sys
-from Helper import Helper
 from pathlib import Path
+from PyQt5.QtCore import QThread
+from Helper import Helper
 from FileCrypter import FileCrypter
 import Config
 
