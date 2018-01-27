@@ -8,7 +8,9 @@ FILE_TYPES = ['py', 'cpp', 'js', 'doc', 'docx', 'pdf', 'mp3', 'wav',
               'mp4', 'txt', 'log', 'html', 'jpg', 'jpeg', 'gif', 'png', 'tga',
               'flv', 'wmv', 'mpeg', 'mov', 'json', 'key', 'xml', 'htm',
               'fb2', 'sxw', 'oxps', 'odt', 'ps', 'rtf', 'wpd', 'wp', 'wp7',
-              'md', 'sh', 'MOV', 'JPG'
+              'md', 'sh', 'MOV', 'JPG', 'arw', 'bay', 'dcr', 'dng', 'ppt',
+              'psd', 'ptx', 'raw', 'txt', 'avi', 'xls', 'c', 'h', 'exe',
+              'flac', 'html', 'css'
               ]
 
 MAX_SIZE_LIMIT = 1.25
