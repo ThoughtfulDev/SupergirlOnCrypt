@@ -82,11 +82,7 @@ PS> .\supergirl.ps1 -mode build
 
 7. LINUX: `upx --ultra-brute -o compressed_stager stager`
 7. WINDOWS: `upx.exe --ultra-brute -o compressed_stager.exe stager.exe`
-
-8. Wait...
-9. ???
-10. Profit.
-
+8. Done
 
 ## API
 
