@@ -1,0 +1,8 @@
+cryptography
+pycryptodome
+requests
+pysocks
+pyqt5
+psutil
+pillow
+pycrypto

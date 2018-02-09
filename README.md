@@ -70,7 +70,7 @@ PS> .\supergirl.ps1 -mode build
 ### Building Stager
 1. Upload your Binary which you gathered from the previous step
 2. Go to `./Stagers/Go` and open `main.go`
-3. Change line 39 `var url string = "your-direct-download-url-here"`
+3. Change line 34 `var url string = "your-direct-download-url-here"`
 
 #### Building a Linux Stager
 4. `GOOS=linux go build -ldflags="-s -w" -o stager main.go`

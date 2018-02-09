@@ -111,7 +111,7 @@ setupVEnv() {
 
 
     info "Installing requirements..."
-    (pip install -r ../App/requirements.txt) > /dev/null 2>&1 &
+    (pip install -r ../App/requirements_lin.txt) > /dev/null 2>&1 &
     spinner $!
     echo -e "\n"
     success "Installed requirements\n"
@@ -159,8 +159,10 @@ setupKey() {
 
 build() {
     source ./venv/bin/activate
-    info "Building binary"
-    (pyinstaller --clean --noupx --onefile --add-data="../App/tor_bin:tor_bin" --add-data="../App/res:res" ../App/SupergirlOnCrypt.py) > ./pyinstaller.log 2>&1 &
+    info "Building binary\n"
+    ENC_KEY=$(cat /dev/urandom | tr -dc 'a-zA-Z0-9' | fold -w 16 | head -n 1)
+    info "Using Bytecode Encryption Key ${ENC_KEY}"
+    (pyinstaller --clean --noupx --onefile --key="${ENC_KEY}" --add-data="../App/tor_bin:tor_bin" --add-data="../App/res:res" ../App/SupergirlOnCrypt.py) > ./pyinstaller.log 2>&1 &
     spinner $!
     echo -e "\n"
     if [ ! -f ./dist/SupergirlOnCrypt ]; then

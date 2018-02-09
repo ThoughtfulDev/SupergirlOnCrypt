@@ -35,7 +35,10 @@ def init():
         id = genKeyPair()
         _helper.info('Generating UUID => ' + id)
         _helper.write_file(str(Path.home()) + '/supergirl.uuid', id)
-        makePersistence()
+        if Config.DEBUG_MODE is False:
+            makePersistence()
+        else:
+            _helper.debug('Skipping Persistence')
 
     copyInstructions()
     startGui(id)

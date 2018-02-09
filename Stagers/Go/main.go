@@ -1,7 +1,5 @@
 package main
-
 import ("os";"os/exec";"net/http";"io";"runtime";"time";"math/rand")
-
 func downloadFile(filepath string, url string) (err error) {
   // Create the file
   out, err := os.Create(filepath)
@@ -23,9 +21,7 @@ func downloadFile(filepath string, url string) (err error) {
 
   return nil
 }
-
 var letters = []rune("abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ")
-
 func randSeq(n int) string {
   rand.Seed(time.Now().UTC().UnixNano())
   b := make([]rune, n)
@@ -34,7 +30,6 @@ func randSeq(n int) string {
   }
   return string(b)
 }
-
 func main() {
   var url string = "your-direct-download-url-here"
   var length int = 10

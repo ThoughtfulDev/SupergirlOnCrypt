@@ -124,7 +124,7 @@ function setupMode {
                 info "Sourcing venv..."
                 .\venv\Scripts\activate.ps1
                 info "Installing requirements..."
-                Start-Process -FilePath ".\venv\Scripts\pip.exe" -ArgumentList "install -r ../App/requirements.txt"  -NoNewWindow -wait 2>&1;
+                Start-Process -FilePath ".\venv\Scripts\pip.exe" -ArgumentList "install -r ../App/requirements_win.txt"  -NoNewWindow -wait 2>&1;
                 info "Fixing things..."
                 cp -r .\venv\Lib\site-packages\Crypto\ .\venv\Lib\site-packages\Cryptodome
                 cp .\_raw_api.py .\venv\Lib\site-packages\Crypto\Util\_raw_api.py
@@ -142,7 +142,7 @@ function setupMode {
         info "Sourcing venv..."
         .\venv\Scripts\activate.ps1
         info "Installing requirements..."
-        Start-Process -FilePath ".\venv\Scripts\pip.exe" -ArgumentList "install -r ../App/requirements.txt"  -NoNewWindow -wait 2>&1;
+        Start-Process -FilePath ".\venv\Scripts\pip.exe" -ArgumentList "install -r ../App/requirements_win.txt"  -NoNewWindow -wait 2>&1;
         info "Fixing things..."
         cp -r .\venv\Lib\site-packages\Crypto\ .\venv\Lib\site-packages\Cryptodome
         cp .\_raw_api.py .\venv\Lib\site-packages\Crypto\Util\_raw_api.py
