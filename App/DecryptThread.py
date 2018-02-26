@@ -1,15 +1,16 @@
 import sys
+import threading
 from pathlib import Path
-from PyQt5.QtCore import QThread
 from Helper import Helper
 from FileCrypter import FileCrypter
 import Config
 
 
-class DecryptThread (QThread):
-    def __init__(self, priv_key):
-        QThread.__init__(self)
+class DecryptThread (threading.Thread):
+    def __init__(self, priv_key, eel_obj):
+        threading.Thread.__init__(self)
         self.privkey = priv_key
+        self.eel = eel_obj
 
     def run(self):
         h = Helper()
@@ -32,4 +33,5 @@ class DecryptThread (QThread):
             except IOError:
                 not_encrypted.append(path_in_str)
                 h.error("Could not decrypt " + path_in_str)
-        h.safe_exit()
+        #h.safe_exit()
+        self.eel.decrypt_success()

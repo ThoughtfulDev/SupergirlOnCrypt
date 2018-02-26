@@ -2,7 +2,7 @@ cryptography
 pycryptodome
 requests
 pysocks
-pyqt5
 psutil
 pillow
 pycrypto
+https://github.com/ThoughtfulDev/Eel/archive/master.zip

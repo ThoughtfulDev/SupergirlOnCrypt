@@ -20,7 +20,7 @@ and i :heart: Supergirl so there you go.
 
 Both Windows AND Linux must have Python >= 3.5 installed to build the Executable/Binary.
 
-Optionally you need the Golang compiler if you want to use the Go Stager because the Binary with Pyinstaller is quite large (~60mb - Linux , 30mb - Windows)
+Optionally you need the Golang compiler if you want to use the Go Stager because the Binary with Pyinstaller is quite large (~30mb - Windows and Linux)
 (Go Stager is only ~700kb).
 
 ---

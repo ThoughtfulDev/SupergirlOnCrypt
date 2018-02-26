@@ -38,7 +38,7 @@ Write-Host -NoNewline "`tI am "
 Write-Host -NoNewline -ForegroundColor Red "SUPERGIRL"
 Write-Host -ForegroundColor Yellow "ONCRYPT"
 Write-Host -NoNewline "`t   Version "
-Write-Host -ForegroundColor Cyan "0.0.1`n"
+Write-Host -ForegroundColor Cyan "0.0.2`n"
 }
 
 function success {
@@ -159,7 +159,7 @@ function buildMode {
     success "Entering Build"
     info "Sourcing venv..."
     .\venv\Scripts\activate.ps1
-    Start-Process -FilePath "pyinstaller" -ArgumentList '--clean --noupx --noconsole --onefile --icon="..\icon.ico" --add-data="..\App\tor_bin;tor_bin" --add-data="..\App\res;res" ..\App\SupergirlOnCrypt.py'  -NoNewWindow -wait 2>&1;
+    Start-Process -FilePath "pyinstaller" -ArgumentList '--clean --noupx --noconsole --hidden-import="bottle_websocket" --onefile --icon="..\icon.ico" --add-data="..\App\tor_bin;tor_bin" --add-data="..\App\res;res" --add-data="..\App\web;web" --add-data=".\venv\Lib\site-packages\eel\eel.js;eel" ..\App\SupergirlOnCrypt.py'  -NoNewWindow -wait 2>&1;
     Remove-Item -Recurse -Force .\build\
     del .\SupergirlOnCrypt.spec
     deactivate

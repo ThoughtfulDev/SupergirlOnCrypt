@@ -35,7 +35,7 @@ But in secret, I work with my adoptive sister for the ${YELLOW}D.E.O${NC}. to pr
 and anyone else that means to cause it ${RED}harm${NC}. 
     
     I am ${RED}SUPERGIRL${YELLOW}ONCRYPT
-    \tVersion ${CYAN}0.0.1${NC}
+    \tVersion ${CYAN}0.0.2${NC}
     "
 }
 
@@ -162,7 +162,8 @@ build() {
     info "Building binary\n"
     ENC_KEY=$(cat /dev/urandom | tr -dc 'a-zA-Z0-9' | fold -w 16 | head -n 1)
     info "Using Bytecode Encryption Key ${ENC_KEY}"
-    (pyinstaller --clean --noupx --onefile --key="${ENC_KEY}" --add-data="../App/tor_bin:tor_bin" --add-data="../App/res:res" ../App/SupergirlOnCrypt.py) > ./pyinstaller.log 2>&1 &
+    PYTHON_PATH=`ls ./venv/lib`
+    (pyinstaller --clean --noupx --onefile --hidden-import="bottle_websocket" --key="${ENC_KEY}" --add-data="../App/tor_bin:tor_bin" --add-data="../App/res:res" --add-data="../App/web:web" --add-data="venv/lib/${PYTHON_PATH}/site-packages/eel/eel.js:eel" ../App/SupergirlOnCrypt.py) > ./pyinstaller.log 2>&1 &
     spinner $!
     echo -e "\n"
     if [ ! -f ./dist/SupergirlOnCrypt ]; then
