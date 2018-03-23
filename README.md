@@ -109,6 +109,13 @@ Your API should now be ready on http://ip/public (should respond with 501)
 
 **I wont show you how to setup a Tor hidden Service**
 
+## Contributing
+You can always open a Pull Request
+
+OR
+
+[![Buy me a coffee](https://www.buymeacoffee.com/assets/img/custom_images/orange_img.png)](https://www.buymeacoffee.com/supergirl)
+
 
 
 # Disclaimer
